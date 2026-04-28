@@ -1,0 +1,46 @@
+{
+  "tools": [
+    {
+      "name": "get_alerts",
+      "description": "Get weather alerts for a US state from the National Weather Service (NWS).",
+      "annotations": {
+        "title": "Get weather alerts",
+        "readOnlyHint": true,
+        "idempotentHint": true
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "Two-letter US state code (e.g. CA, NY)"
+          }
+        },
+        "required": ["state"]
+      }
+    },
+    {
+      "name": "get_forecast",
+      "description": "Get weather forecast for a location (NWS grid; US locations work best).",
+      "annotations": {
+        "title": "Get weather forecast",
+        "readOnlyHint": true,
+        "idempotentHint": true
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "latitude": {
+            "type": "number",
+            "description": "Latitude in decimal degrees"
+          },
+          "longitude": {
+            "type": "number",
+            "description": "Longitude in decimal degrees"
+          }
+        },
+        "required": ["latitude", "longitude"]
+      }
+    }
+  ]
+}
