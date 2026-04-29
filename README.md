@@ -22,6 +22,10 @@ If not,
 
   gcloud auth application-default login
 
+Ensure $PROJECT_ID and LOCATION is set, if not
+  export PROJECT_ID=ai-ml-team-sandbox
+  export LOCATION=us-central1
+
 ---------------------
 Deploy on Cloud Run
 ---------------------
@@ -32,20 +36,20 @@ Ensure $PROJECT_ID is set
 
   gcloud artifacts repositories create remote-mcp-servers \
     --repository-format=docker \
-    --location=us-central1 \
+    --location=$LOCATION \
     --description="Repository for remote MCP servers" \
     --project=$PROJECT_ID
 
 2. build container image
 
-  gcloud builds submit --region=us-central1 --tag us-central1-docker.pkg.dev/$PROJECT_ID/remote-mcp-servers/mcp-server:latest
+  gcloud builds submit --region=$LOCATION --tag $LOCATION-docker.pkg.dev/$PROJECT_ID/remote-mcp-servers/mcp-server:latest
 
 
 3. deploy, it will output the access url
 
   gcloud run deploy mcp-server \
-    --image us-central1-docker.pkg.dev/$PROJECT_ID/remote-mcp-servers/mcp-server:latest \
-    --region=us-central1 \
+    --image $LOCATION-docker.pkg.dev/$PROJECT_ID/remote-mcp-servers/mcp-server:latest \
+    --region=$LOCATION \
     --no-allow-unauthenticated
 
 
@@ -72,7 +76,7 @@ Registering to cloud api registry
 From the directory that contains `toolspec.json` (this repo root), run following (replace the url from previous step, but make sure to keep /mcp,protocolBinding=JSONRPC at the end):
 
   gcloud alpha agent-registry services create weather-mcp \
-    --project=ai-ml-team-sandbox \       
+    --project=$PROJECT_ID \       
     --location=global \                                          
     --display-name="Weather MCP" \                         
     --description="The Weather MCP service provides tools to get weather alerts for any state (two letters e.g., TX), forecast for a specific latitude and longitude" \
@@ -87,13 +91,13 @@ Verify registration - Optional
 - Getting list of server
   
   gcloud alpha agent-registry services list \
-    --project=ai-ml-team-sandbox \
+    --project=$PROJECT_ID \
     --location=global
 
 - get the details
 
   gcloud alpha agent-registry mcp-servers search \
-    --project=ai-ml-team-sandbox \
+    --project=$PROJECT_ID \
     --location=global \
     --search-string="weather-mcp"
 
