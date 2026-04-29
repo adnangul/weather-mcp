@@ -14,18 +14,21 @@ The server is designed to run locally, in containers, or in cloud environments, 
 Google Cloud MCP servers overview - useful info regarding google hosted/maanged MCP servers 
 https://docs.cloud.google.com/mcp/overview
 
-
+---------------------
 Below instructions are targetted for GCP enviornment, make sure your executing it on shell already authenticated
-If not, 
+If not,
+``` 
   gcloud auth login
   gcloud config set project <project id> 
 
   gcloud auth application-default login
+```
 
 Ensure $PROJECT_ID and LOCATION is set, if not
+```
   export PROJECT_ID=ai-ml-team-sandbox
   export LOCATION=us-central1
-
+```
 ---------------------
 Deploy on Cloud Run
 ---------------------
@@ -33,25 +36,26 @@ Deploy on Cloud Run
 Ensure $PROJECT_ID is set
 
 1. create artifact registry (one time)
-
+```
   gcloud artifacts repositories create remote-mcp-servers \
     --repository-format=docker \
     --location=$LOCATION \
     --description="Repository for remote MCP servers" \
     --project=$PROJECT_ID
+```
 
 2. build container image
-
+```
   gcloud builds submit --region=$LOCATION --tag $LOCATION-docker.pkg.dev/$PROJECT_ID/remote-mcp-servers/mcp-server:latest
-
+```
 
 3. deploy, it will output the access url
-
+```
   gcloud run deploy mcp-server \
     --image $LOCATION-docker.pkg.dev/$PROJECT_ID/remote-mcp-servers/mcp-server:latest \
     --region=$LOCATION \
     --no-allow-unauthenticated
-
+```
 
 - The above will secure the access to the mcp server via IAP, use 
   Note: --no-allow-unauthenticated will not allow request without authentication. It will requied this role (roles/run.invoker) to allow access
@@ -74,7 +78,7 @@ Registering to cloud api registry
 4. Register the mcp server to the Agent Registry - ensure the agent registry is enabled, and to have  Agent Registry Editor (roles/agentregistry.editor) on the project (or equivalent permissions)
 
 From the directory that contains `toolspec.json` (this repo root), run following (replace the url from previous step, but make sure to keep /mcp,protocolBinding=JSONRPC at the end):
-
+```
   gcloud alpha agent-registry services create weather-mcp \
     --project=$PROJECT_ID \       
     --location=global \                                          
@@ -83,24 +87,24 @@ From the directory that contains `toolspec.json` (this repo root), run following
     --mcp-server-spec-type=tool-spec \
     --mcp-server-spec-content=toolspec.json \
     --interfaces=url=https://<url/server>/mcp,protocolBinding=JSONRPC
-
+```
 
 ------------------------------
 Verify registration - Optional 
 ------------------------------ 
-- Getting list of server
-  
+- Getting list of servers
+```  
   gcloud alpha agent-registry services list \
     --project=$PROJECT_ID \
     --location=global
-
-- get the details
-
+```
+- Get the details (filtered)
+```
   gcloud alpha agent-registry mcp-servers search \
     --project=$PROJECT_ID \
     --location=global \
     --search-string="weather-mcp"
-
+```
 
 ------------------------------ 
 references
