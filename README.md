@@ -33,8 +33,6 @@ Ensure $PROJECT_ID and LOCATION is set, if not
 Deploy on Cloud Run
 ---------------------
 
-Ensure $PROJECT_ID is set
-
 1. create artifact registry (one time)
 ```
   gcloud artifacts repositories create remote-mcp-servers \
