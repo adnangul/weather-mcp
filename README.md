@@ -76,6 +76,9 @@ Registering to cloud api registry
 4. Register the mcp server to the Agent Registry - ensure the agent registry is enabled, and to have  Agent Registry Editor (roles/agentregistry.editor) on the project (or equivalent permissions)
 
 From the directory that contains `toolspec.json` (this repo root), run following (replace the url from previous step, but make sure to keep /mcp,protocolBinding=JSONRPC at the end):
+
+#### Note: the pipeline will pull the display name and description from mcp.properties
+
 ```
   gcloud alpha agent-registry services create weather-mcp \
     --project=$PROJECT_ID \       
